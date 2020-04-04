@@ -22,6 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 工具类，用于限制leader 到observers 和followers 或follower 到observers 的并发同步次数。
+ * {@link LearnerHandler} 对象需要在发送同步前调用{@link #beginSync(boolean)}，并且在结束时调用
+ * {@link #endSync()}
+ *
  * Utility class to limit the number of concurrent syncs from a leader to
  * observers and followers or from a follower to observers.  {@link LearnerHandler}
  * objects should call {@link #beginSync(boolean)} before sending a sync and
@@ -33,6 +37,8 @@ public class LearnerSyncThrottler {
     private static final Logger LOG = LoggerFactory.getLogger(LearnerSyncThrottler.class);
 
     private final Object countSyncObject = new Object();
+
+    /** 在同步状态的任务数 */
     private int syncInProgress;
 
     private volatile int maxConcurrentSyncs;

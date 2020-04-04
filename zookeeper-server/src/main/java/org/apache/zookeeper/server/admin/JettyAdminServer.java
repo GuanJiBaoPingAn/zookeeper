@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类封装了Jetty 服务器
  * This class encapsulates a Jetty server for running Commands.
  *
  * Given the default settings, start a ZooKeeper server and visit
@@ -200,6 +201,9 @@ public class JettyAdminServer implements AdminServer {
     }
 
     /**
+     * 设置需要执行命令的ZooKeeperServer
+     * 不需要在调用{@link #start()} 前设置ZK 服务器，zk 服务器可被设置为null。
+     *
      * Set the ZooKeeperServer that will be used to run Commands.
      *
      * It is not necessary to set the ZK server before calling

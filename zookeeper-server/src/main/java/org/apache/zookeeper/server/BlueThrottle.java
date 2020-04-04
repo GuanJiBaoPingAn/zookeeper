@@ -24,6 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 令牌桶的限流器
+ * 初始有一定量的令牌{@link #maxTokens}，每次{@link #checkLimit(int)} 调用分配令牌。
+ * 令牌桶随着时间恢复，每{@link #fillTime} 毫秒恢复{@link #fillCount} 个令牌，至多
+ * {@link #maxTokens}
+ * 该限流设计允许短时间爆发的通过，同时会控制固定时间间隔的请求数
+ *
+ *
  * Implements a token-bucket based rate limiting mechanism with optional
  * probabilistic dropping inspired by the BLUE queue management algorithm [1].
  *
@@ -204,7 +211,7 @@ public class BlueThrottle {
         logWeighedThrottlingSetting();
     }
 
-    /* Varation of Integer.getInteger for real number properties */
+    /* Variation of Integer.getInteger for real number properties */
     private static double getDoubleProp(String name, double def) {
         String val = System.getProperty(name);
         if (val != null) {

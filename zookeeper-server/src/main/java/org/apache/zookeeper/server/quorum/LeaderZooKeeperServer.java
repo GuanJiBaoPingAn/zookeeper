@@ -36,6 +36,9 @@ import org.apache.zookeeper.server.ZKDatabase;
 import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 
 /**
+ * 与ZooKeeperServer 一样。只是替换了请求链。
+ * PrepRequestProcessor -> ProposalRequestProcessor -> CommitProcessor -> Leader.ToBeAppliedRequestProcessor ->
+ * FinalRequestProcessor
  *
  * Just like the standard ZooKeeperServer. We just replace the request
  * processors: PrepRequestProcessor -&gt; ProposalRequestProcessor -&gt;

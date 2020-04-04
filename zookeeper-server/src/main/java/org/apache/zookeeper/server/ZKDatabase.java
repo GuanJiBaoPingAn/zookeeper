@@ -61,6 +61,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类维护了ZooKeeper 的内存数据库，包括服务器状态，会话、数据树、提交日志。从日志和硬盘读取日志后启动
  * This class maintains the in memory database of zookeeper
  * server states that includes the sessions, datatree and the
  * committed logs. It is booted up  after reading the logs
@@ -75,6 +76,8 @@ public class ZKDatabase {
      * all these members.
      */
     protected DataTree dataTree;
+
+    /** sessionId -> timeout */
     protected ConcurrentHashMap<Long, Integer> sessionsWithTimeouts;
     protected FileTxnSnapLog snapLog;
     protected long minCommittedLog, maxCommittedLog;
@@ -95,6 +98,7 @@ public class ZKDatabase {
     private volatile boolean initialized = false;
 
     /**
+     * 上一次快照起的快照次数
      * Number of txn since last snapshot;
      */
     private AtomicInteger txnCount = new AtomicInteger(0);

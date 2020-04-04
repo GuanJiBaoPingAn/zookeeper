@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
+ * 该类储存多个quorum 和选举地址
  * This class allows to store several quorum and electing addresses.
  *
  * See ZOOKEEPER-3188 for a discussion of this feature.

@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * ClientCnxnSocket 实现了socket 的底层通信
  * A ClientCnxnSocket does the lower level communication with a socket
  * implementation.
  *

@@ -28,6 +28,7 @@ import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig.ConfigException;
 
 /**
+ * 服务器配置项。使用该类，而不是Properties
  * Server configuration storage.
  *
  * We use this instead of Properties as it's typed.
@@ -95,7 +96,7 @@ public class ServerConfig {
         QuorumPeerConfig config = new QuorumPeerConfig();
         config.parse(path);
 
-        // let qpconfig parse the file and then pull the stuff we are
+        // let qpconfig parse the fiQuorumPeerMainle and then pull the stuff we are
         // interested in
         readFrom(config);
     }

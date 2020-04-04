@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 保持Observers 在同步状态的接口
  * interface for keeping Observers in sync
  */
 public abstract class LearnerMaster {

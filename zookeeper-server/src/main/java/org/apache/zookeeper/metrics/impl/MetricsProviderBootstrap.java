@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 用于启动MetricsProviders 的工具类
  * Utility for bootstrap process of MetricsProviders
  */
 public abstract class MetricsProviderBootstrap {

@@ -25,26 +25,31 @@ package org.apache.zookeeper;
  */
 public class Quotas {
 
-    /** the zookeeper nodes that acts as the management and status node **/
+    /** ZooKeeper 节点 the zookeeper nodes that acts as the management and status node **/
     public static final String procZookeeper = "/zookeeper";
 
-    /** the zookeeper quota node that acts as the quota
+    /**
+     * ZooKeeper quota 节点，用于quota 管理
+     * the zookeeper quota node that acts as the quota
      * management node for zookeeper */
     public static final String quotaZookeeper = "/zookeeper/quota";
 
     /**
+     * 子树的限制节点数
      * the limit node that has the limit of
      * a subtree
      */
     public static final String limitNode = "zookeeper_limits";
 
     /**
+     * 状态节点，观察子树的限制
      * the stat node that monitors the limit of
      * a subtree.
      */
     public static final String statNode = "zookeeper_stats";
 
     /**
+     * 返回给定路径的quota 路径
      * return the quota path associated with this
      * prefix
      * @param path the actual path in zookeeper.
@@ -55,6 +60,7 @@ public class Quotas {
     }
 
     /**
+     * 返回给定路径的quota 状态路径
      * return the stat quota path associated with this
      * prefix.
      * @param path the actual path in zookeeper

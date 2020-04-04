@@ -53,6 +53,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 提供了TxnLog 的获取和添加API
+ * 事务格式如下：
+ *
  * This class implements the TxnLog interface. It provides api's
  * to access the txnlogs and add entries to it.
  * <p>
@@ -107,7 +110,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     static final String FSYNC_WARNING_THRESHOLD_MS_PROPERTY = "fsync.warningthresholdms";
     static final String ZOOKEEPER_FSYNC_WARNING_THRESHOLD_MS_PROPERTY = "zookeeper." + FSYNC_WARNING_THRESHOLD_MS_PROPERTY;
 
-    /** Maximum time we allow for elapsed fsync before WARNing */
+    /** fsync 使用时间限制 Maximum time we allow for elapsed fsync before WARNing */
     private static final long fsyncWarningThresholdMS;
 
     /**
@@ -121,6 +124,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     private static final String txnLogSizeLimitSetting = "zookeeper.txnLogSizeLimitInKb";
 
     /**
+     * 事务日志大小限制（字节）
      * The actual txnlog size limit in bytes.
      */
     private static long txnLogSizeLimit = -1;
@@ -153,15 +157,18 @@ public class FileTxnLog implements TxnLog, Closeable {
     File logDir;
     private final boolean forceSync = !System.getProperty("zookeeper.forceSync", "yes").equals("no");
     long dbId;
+    /** 需要刷到磁盘的流 */
     private final Queue<FileOutputStream> streamsToFlush = new ArrayDeque<>();
     File logFileWrite = null;
     private FilePadding filePadding = new FilePadding();
 
     private ServerStats serverStats;
 
+    /** 刷新到磁盘所使用的时间 */
     private volatile long syncElapsedMS = -1L;
 
     /**
+     * 所有完成的日志文件，不包括当前文件
      * A running total of all complete log files
      * This does not include the current file being written to
      */
@@ -221,6 +228,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 创建使用的校验码算法
      * creates a checksum algorithm to be used
      * @return the checksum used for this txnlog
      */
@@ -229,6 +237,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 将当前日志文件记录磁盘，创建一个新的文件
      * rollover the current log file to a new one.
      * @throws IOException
      */
@@ -244,6 +253,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 关闭所有文件句柄，包括{@link #logStream} {@link #streamsToFlush}
      * close all the open file handles
      * @throws IOException
      */
@@ -257,6 +267,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 在事务日志中添加一条记录
      * append an entry to the transaction log
      * @param hdr the header of the transaction
      * @param txn the transaction part of the entry
@@ -308,6 +319,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 获取给定文件中在给定zxid 之前的文件
      * Find the log file that starts at, or just before, the snapshot. Return
      * this and all subsequent logs. Results are ordered by zxid of file,
      * ascending order.
@@ -344,6 +356,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 获取最近记录事务日志的zxid
      * get the last zxid that was logged in the transaction logs
      * @return the last zxid logged in the transaction logs
      */
@@ -384,6 +397,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 提交日志。确保所有东西储存到了磁盘
      * commit the logs. make sure that everything hits the
      * disk
      */
@@ -440,6 +454,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 读取所有给定zxid 的事务
      * start reading all the transactions from the given zxid
      * @param zxid the zxid to start reading transactions from
      * @return returns an iterator to iterate through the transaction
@@ -450,6 +465,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 读取所有给定zxid 的事务
      * start reading all the transactions from the given zxid.
      *
      * @param zxid the zxid to start reading transactions from
@@ -494,6 +510,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 读取给定事务文件的文件头
      * read the header of the transaction file
      * @param file the transaction file to read
      * @return header that was read from the file
@@ -541,6 +558,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     /**
+     * 记录InputStream 位置的类。该位置指向该应用消费到的文职。
      * a class that keeps track of the position
      * in the input stream. The position points to offset
      * that has been consumed by the applications. It can
@@ -626,6 +644,7 @@ public class FileTxnLog implements TxnLog, Closeable {
         static final String CRC_ERROR = "CRC check failed";
 
         PositionInputStream inputStream = null;
+        /** 大于{@link #zxid} 的文件列表 */
         //stored files is the list of files greater than
         //the zxid we are looking for.
         private ArrayList<File> storedFiles;

@@ -51,9 +51,11 @@ import org.slf4j.LoggerFactory;
  */
 public class FileTxnSnapLog {
 
+    /** 事务日志文件目录 */
     //the directory containing the
     //the transaction logs
     final File dataDir;
+    /** 快照文件目录 */
     //the directory containing the
     //the snapshot directory
     final File snapDir;
@@ -79,6 +81,7 @@ public class FileTxnSnapLog {
     private static final String EMPTY_SNAPSHOT_WARNING = "No snapshot found, but there are log entries. ";
 
     /**
+     * 该监听器帮助外部API 调用恢复信息
      * This listener helps
      * the external apis calling
      * restore to gather information
@@ -92,6 +95,7 @@ public class FileTxnSnapLog {
     }
 
     /**
+     * 结束data tree 的恢复
      * Finalizing restore of data tree through
      * a set of operations (replaying transaction logs,
      * calculating data tree digests, and so on.).

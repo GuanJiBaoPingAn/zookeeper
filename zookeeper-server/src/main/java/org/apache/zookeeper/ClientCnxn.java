@@ -96,6 +96,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 /**
+ * 客户端管理socket io。ClientCnxn 维护一个可用服务器列表。
  * This class manages the socket i/o for the client. ClientCnxn maintains a list
  * of available servers to connect to and "transparently" switches servers it is
  * connected to as needed.
@@ -113,6 +114,8 @@ public class ClientCnxn {
      * re-establishement across multiple SetWatches calls. This constant
      * controls the size of each call. It is set to 128kB to be conservative
      * with respect to the server's 1MB default for jute.maxBuffer.
+     * 如果一个会话有大量watch，在重连时调用SetWatches 会超过jute.maxBuffer，需要分隔
+     * 成多个调用，该值为每次的最大值。128KiB
      */
     private static final int SET_WATCHES_MAX_LENGTH = 128 * 1024;
 
@@ -142,11 +145,13 @@ public class ClientCnxn {
     private final CopyOnWriteArraySet<AuthData> authInfo = new CopyOnWriteArraySet<AuthData>();
 
     /**
+     * 已发送等待响应的包
      * These are the packets that have been sent and are waiting for a response.
      */
     private final Queue<Packet> pendingQueue = new ArrayDeque<>();
 
     /**
+     * 需要发送的包
      * These are the packets that need to be sent.
      */
     private final LinkedBlockingDeque<Packet> outgoingQueue = new LinkedBlockingDeque<Packet>();
@@ -154,6 +159,7 @@ public class ClientCnxn {
     private int connectTimeout;
 
     /**
+     * 与服务器协商的超时时间ms
      * The timeout in ms the client negotiated with the server. This is the
      * "real" timeout, not the timeout request by the client (which may have
      * been increased/decreased by the server which applies bounds to this
@@ -857,6 +863,7 @@ public class ClientCnxn {
     }
 
     /**
+     * 该类服务发送请求队列和生成心跳。
      * This class services the outgoing request queue and generates the heart
      * beats. It also spawns the ReadThread.
      */

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
+ * 迭代ZooKeeper 路径。每次迭代至上一层。因此效果是，从初始位置迭代到所有父节点。
  * Iterates over a ZooKeeper path. Each iteration goes up one parent path. Thus, the
  * effect of the iterator is to iterate over the initial path and then all of its parents.
  */

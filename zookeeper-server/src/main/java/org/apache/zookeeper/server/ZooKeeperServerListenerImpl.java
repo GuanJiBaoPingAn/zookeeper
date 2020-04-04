@@ -23,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * {@link ZooKeeperServerListener} 的默认实现，用于通知内部错误。如，当关键线程由于致命错误停止了，
+ * 该监听器将通知到服务器
  * Default listener implementation, which will be used to notify internal
  * errors. For example, if some critical thread has stopped due to fatal errors,
  * then it will get notifications and will change the state of ZooKeeper server

@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.zookeeper.ZooKeeper;
 
 /**
+ * 基本命令行类
  * base class for all CLI commands
  */
 public abstract class CliCommand {

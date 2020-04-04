@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类提供了统一接口用于注册/取消注册ZooKeeper 的MBean。
  * This class provides a unified interface for registering/unregistering of
  * zookeeper MBeans with the platform MBean server. It builds a hierarchy of MBeans
  * where each MBean represented by a filesystem-like path. Eventually, this hierarchy

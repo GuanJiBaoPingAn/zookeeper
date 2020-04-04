@@ -25,6 +25,8 @@ import java.util.Set;
 public interface ClientWatchManager {
 
     /**
+     * 返回给定事件需要通知的watcher。该manager 不能通知到watcher，但事件触发了需要更新内部数据。
+     *
      * Return a set of watchers that should be notified of the event. The
      * manager must not notify the watcher(s), however it will update it's
      * internal structure as if the watches had triggered. The intent being

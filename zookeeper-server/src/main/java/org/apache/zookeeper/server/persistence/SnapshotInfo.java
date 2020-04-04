@@ -19,6 +19,7 @@
 package org.apache.zookeeper.server.persistence;
 
 /**
+ * 存储快照文件的zxif 和最后一次修改的时间戳
  * stores the zxid (as in its file name) and the last modified timestamp
  * of a snapshot file
  */

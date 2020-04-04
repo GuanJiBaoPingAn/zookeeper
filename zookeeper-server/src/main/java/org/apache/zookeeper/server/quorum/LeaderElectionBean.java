@@ -22,6 +22,7 @@ import java.util.Date;
 import org.apache.zookeeper.jmx.ZKMBeanInfo;
 
 /**
+ * leader 选举的MBean 接口
  * Leader election MBean interface implementation
  */
 public class LeaderElectionBean implements LeaderElectionMXBean, ZKMBeanInfo {

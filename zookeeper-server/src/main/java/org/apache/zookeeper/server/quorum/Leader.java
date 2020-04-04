@@ -74,6 +74,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类为leader 的逻辑控制
  * This class has the control logic for the Leader.
  */
 public class Leader extends LearnerMaster {

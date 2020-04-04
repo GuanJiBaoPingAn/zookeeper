@@ -30,6 +30,8 @@ import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.data.StatPersisted;
 
 /**
+ * DataTree 中的DataNode
+ * DataNode 持有父节点的引用，储存数据的字节数组，ACL 数组，状态，子路径集合
  * This class contains the data for a node in the data tree.
  * <p>
  * A data node contains a reference to its parent, a byte array as its data, an
@@ -39,9 +41,11 @@ import org.apache.zookeeper.data.StatPersisted;
 @SuppressFBWarnings({"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 public class DataNode implements Record {
 
+    /** 从路径、数据和状态创建的摘要 */
     // the digest value of this node, calculated from path, data and stat
     private volatile long digest;
 
+    /** 表明该节点的摘要是否是最新状态的 */
     // indicate if the digest of this node is up to date or not, used to
     // optimize the performance.
     volatile boolean digestCached;
@@ -60,6 +64,7 @@ public class DataNode implements Record {
     public StatPersisted stat;
 
     /**
+     * 子节点列表。
      * the list of children for this node. note that the list of children string
      * does not contain the parent path -- just the last part of the path. This
      * should be synchronized on except deserializing (for speed up issues).

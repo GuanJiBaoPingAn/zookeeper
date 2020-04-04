@@ -55,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 每一个leaner 需要创建一个类的实例
  * There will be an instance of this class created by the Leader for each
  * learner. All communication with a learner is handled by this
  * class.
@@ -71,7 +72,10 @@ public class LearnerHandler extends ZooKeeperThread {
 
     final LearnerMaster learnerMaster;
 
-    /** Deadline for receiving the next ack. If we are bootstrapping then
+    /**
+     * 接受到下次ack 的死限。如果我们在启动中，那么基于initLimit，如果我们启动完成，那么基于syncLimit。
+     * 如果该learner 过了死限，应该考虑不再和leader 进行同步
+     * Deadline for receiving the next ack. If we are bootstrapping then
      * it's based on the initLimit, if we are done bootstrapping it's based
      * on the syncLimit. Once the deadline is past this learner should
      * be considered no longer "sync'd" with the leader. */
@@ -97,6 +101,7 @@ public class LearnerHandler extends ZooKeeperThread {
     }
 
     /**
+     * 需要发送给learner 的包
      * The packets to be sent to the learner
      */
     final LinkedBlockingQueue<QuorumPacket> queuedPackets = new LinkedBlockingQueue<QuorumPacket>();
@@ -120,6 +125,7 @@ public class LearnerHandler extends ZooKeeperThread {
     }
 
     /**
+     * 在quorum 包队列中会按{@link #markerPacketInterval} 间隔添加标记包
      * Marker packets would be added to quorum packet queue after every
      * markerPacketInterval packets.
      * It is ok if packetCounter overflows.
@@ -128,6 +134,8 @@ public class LearnerHandler extends ZooKeeperThread {
     private AtomicInteger packetCounter = new AtomicInteger();
 
     /**
+     * 该类控制leader 等待learner proposal 响应的时间。如果事件超过了syncLimit，
+     * 连接会被关闭。一次只会跟踪一个proposal。
      * This class controls the time that the Leader has been
      * waiting for acknowledgement of a proposal from this Learner.
      * If the time is above syncLimit, the connection will be closed.
@@ -244,12 +252,14 @@ public class LearnerHandler extends ZooKeeperThread {
     private boolean forceSnapSync = false;
 
     /**
+     * 我们是否需要将TRUNC 或DIFF 包加入队列
      * Keep track of whether we need to queue TRUNC or DIFF into packet queue
      * that we are going to blast it to the learner
      */
     private boolean needOpPacket = true;
 
     /**
+     * 上一个发送给learner 的zxid
      * Last zxid sent to the learner as part of synchronization
      */
     private long leaderLastZxid;
@@ -299,6 +309,7 @@ public class LearnerHandler extends ZooKeeperThread {
     }
 
     /**
+     * 如果该包入队，发送线程会停止
      * If this packet is queued, the sender thread will exit
      */
     final QuorumPacket proposalOfDeath = new QuorumPacket();

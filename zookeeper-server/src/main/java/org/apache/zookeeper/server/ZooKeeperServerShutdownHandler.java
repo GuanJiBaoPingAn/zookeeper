@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.zookeeper.server.ZooKeeperServer.State;
 
 /**
+ * 该处理器用于处理ERROR 或SHUTDOWN 状态的转变。
  * ZooKeeper server shutdown handler which will be used to handle ERROR or
  * SHUTDOWN server state transitions, which in turn releases the associated
  * shutdown latch.
@@ -35,6 +36,7 @@ class ZooKeeperServerShutdownHandler {
     }
 
     /**
+     * 当服务器状态转变到新值时会调用
      * This will be invoked when the server transition to a new server state.
      *
      * @param state new server state

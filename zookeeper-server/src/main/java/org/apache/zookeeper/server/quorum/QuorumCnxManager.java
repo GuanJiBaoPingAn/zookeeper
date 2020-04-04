@@ -76,6 +76,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * 该类用TCP 实现了leader 选举的连接管理。它为每对服务器管理一个连接。
+ *
  * This class implements a connection manager for leader election using TCP. It
  * maintains one connection for every pair of servers. The tricky part is to
  * guarantee that there is exactly one connection for every pair of servers that
@@ -128,7 +130,8 @@ public class QuorumCnxManager {
      */
     public static final int maxBuffer = 2048;
 
-    /*
+    /**
+     * connection timeout
      * Connection time out value in milliseconds
      */
 
@@ -136,7 +139,8 @@ public class QuorumCnxManager {
 
     final QuorumPeer self;
 
-    /*
+    /**
+     * 本地my id
      * Local IP address
      */
     final long mySid;
@@ -144,23 +148,31 @@ public class QuorumCnxManager {
     final Map<Long, QuorumPeer.QuorumServer> view;
     final boolean listenOnAllIPs;
     private ThreadPoolExecutor connectionExecutor;
+
+    /** 连接中的连接 serverId */
     private final Set<Long> inprogressConnections = Collections.synchronizedSet(new HashSet<>());
     private QuorumAuthServer authServer;
+
+    /** quorum learner 节点的认证 */
     private QuorumAuthLearner authLearner;
+
+    /** quorum 是否需要sasl 认证 */
     private boolean quorumSaslAuthEnabled;
     /*
      * Counter to count connection processing threads.
      */
     private AtomicInteger connectionThreadCnt = new AtomicInteger(0);
 
-    /*
+    /**
+     * serverId -> SenderWorker
      * Mapping from Peer to Thread number
      */
     final ConcurrentHashMap<Long, SendWorker> senderWorkerMap;
     final ConcurrentHashMap<Long, BlockingQueue<ByteBuffer>> queueSendMap;
     final ConcurrentHashMap<Long, ByteBuffer> lastMessageSent;
 
-    /*
+    /**
+     * 接收到的消息队列
      * Reception queue
      */
     public final BlockingQueue<Message> recvQueue;
@@ -176,7 +188,8 @@ public class QuorumCnxManager {
      */
     public final Listener listener;
 
-    /*
+    /**
+     * worker 线程数
      * Counter to count worker threads
      */
     private AtomicInteger threadCnt = new AtomicInteger(0);
@@ -365,6 +378,9 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 首先创建socket，进行SSL 握手并进行必要的认证。然后进行初始化协议。如果该服务器已初始化该连接并能正常使用，
+     * 则 放弃那个连接，否则复用。
+     *
      * First we create the socket, perform SSL handshake and authentication if needed.
      * Then we perform the initiation protocol.
      * If this server has initiated the connection, then it gives up on the
@@ -440,10 +456,13 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 发送连接请求到同行服务器
      * Thread to send connection request to peer server.
      */
     private class QuorumConnectionReqThread extends ZooKeeperThread {
         final MultipleAddresses electionAddr;
+
+        /** serverId */
         final Long sid;
         QuorumConnectionReqThread(final MultipleAddresses electionAddr, final Long sid) {
             super("QuorumConnectionReqThread-" + sid);
@@ -682,6 +701,7 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 将发送消息入队。当前，只有leader 选举使用
      * Processes invoke this message to queue a message to send. Currently,
      * only leader election uses it.
      */
@@ -733,6 +753,7 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 尝试和给定服务器sid 建立连接。立即返回，异步建立连接
      * Try to establish a connection to server with id sid.
      * The function will return quickly and the connection will be established asynchronously.
      *
@@ -782,6 +803,7 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 尝试和每一个服务器建立连接
      * Try to establish a connection with each server if one
      * doesn't exist.
      */
@@ -795,6 +817,7 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 检查所有的队列是否都为空，表明所有的消息都已经发送
      * Check if all queues are empty, indicating that all messages have been delivered.
      */
     boolean haveDelivered() {
@@ -844,6 +867,8 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 将配置项{@link #socketTimeout} {@link #tcpKeepAlive}置入socket
+     *
      * Helper method to set socket options.
      *
      * @param sock
@@ -1140,12 +1165,13 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 发送消息的线程。实例在队列中等待。如果连接断开，则打开新的连接
      * Thread to send messages. Instance waits on a queue, and send a message as
      * soon as there is one available. If connection breaks, then opens a new
      * one.
      */
     class SendWorker extends ZooKeeperThread {
-
+        /** 需要发送到的serverId */
         Long sid;
         Socket sock;
         RecvWorker recvWorker;
@@ -1234,6 +1260,8 @@ public class QuorumCnxManager {
             threadCnt.incrementAndGet();
             try {
                 /**
+                 * 如果需要发送的队列中为空，则发送最后一次发送的消息以保证最后一个消息被同行收到。
+                 * 最后一个消息可能处理失败（接收方未完成接收）
                  * If there is nothing in the queue to send, then we
                  * send the lastMessage to ensure that the last message
                  * was received by the peer. The message could be dropped
@@ -1323,6 +1351,7 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 接受消息的线程。实例等待socket 读完成。如果通道被破坏，则从receivers 中删除该worker
      * Thread to receive messages. Instance waits on a socket read. If the
      * channel breaks, then removes itself from the pool of receivers.
      */
@@ -1447,6 +1476,7 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 将给定消息放入队列{@link #recvQueue}
      * Inserts an element in the {@link #recvQueue}. If the Queue is full, this
      * methods removes an element from the head of the Queue and then inserts the
      * element at the tail of the queue.
@@ -1461,6 +1491,7 @@ public class QuorumCnxManager {
     }
 
     /**
+     * 从队列中取消息
      * Retrieves and removes a message at the head of this queue,
      * waiting up to the specified wait time if necessary for an element to
      * become available.

@@ -30,6 +30,9 @@ public class AdminServerFactory {
     private static final Logger LOG = LoggerFactory.getLogger(AdminServerFactory.class);
 
     /**
+     * 根据配置项{@code zookeeper.admin.enableServer} 来创建AdminServer
+     * 启用时使用{@link JettyAdminServer}，未启用时使用{@link DummyAdminServer}
+     *
      * This method encapsulates the logic for whether we should use a
      * JettyAdminServer (i.e., the AdminServer is enabled) or a DummyAdminServer
      * (i.e., the AdminServer is disabled). It uses reflection when attempting

@@ -27,13 +27,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 支持更新本地会话的会话追踪器
  * A session tracker that supports upgradeable local sessions.
  */
 public abstract class UpgradeableSessionTracker implements SessionTracker {
 
     private static final Logger LOG = LoggerFactory.getLogger(UpgradeableSessionTracker.class);
 
+    /** sessionId -> timeout 本地会话 */
     private ConcurrentMap<Long, Integer> localSessionsWithTimeouts;
+
+    /** sessionId -> timeout 全局会话 */
     private ConcurrentMap<Long, Integer> upgradingSessions;
     protected LocalSessionTracker localSessionTracker;
     protected boolean localSessionsEnabled;
@@ -73,6 +77,7 @@ public abstract class UpgradeableSessionTracker implements SessionTracker {
     public abstract boolean isGlobalSession(long sessionId);
 
     /**
+     * 将给定会话更新为全局会话
      * Upgrades the session to a global session.
      * This simply removes the session from the local tracker and marks
      * it as global.  It is up to the caller to actually
@@ -85,6 +90,7 @@ public abstract class UpgradeableSessionTracker implements SessionTracker {
         if (localSessionsWithTimeouts == null) {
             return -1;
         }
+        // 不会出现竞态，只会有一个线程从map 中获取
         // We won't race another upgrade attempt because only one thread
         // will get the timeout from the map
         Integer timeout = localSessionsWithTimeouts.remove(sessionId);

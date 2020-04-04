@@ -260,6 +260,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
         }
 
         /**
+         * 接受socket 连接。强制限制每个客户端IP 的连接个数。轮询分配到selector 线程处理。
          * Accept new socket connections. Enforces maximum number of connections
          * per client IP address. Round-robin assigns to selector thread for
          * handling. Returns whether pulled a connection off the accept queue
@@ -497,6 +498,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     }
 
     /**
+     * IO work 请求。
      * IOWorkRequest is a small wrapper class to allow doIO() calls to be
      * run on a connection using a WorkerService.
      */

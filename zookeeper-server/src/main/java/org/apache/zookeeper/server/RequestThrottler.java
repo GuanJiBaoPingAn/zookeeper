@@ -26,6 +26,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 当启用时，该类会限制外部提交到请求处理流水线。增强了在连接层{@link NIOServerCnxn}
+ * {@link NettyServerCnxn} 的功能。
+ * 连接层在TCP 连接请求超出限制时取消选举。但是连接层允许一个连接在取消选举前至少请求一次。
+ * 因此，在某种情况下40000 个客户端连接，请求数可能为40000
+ * 该类通过增加额外的队列解决了该问题。当启用时，客户端连接的请求不会提交至请求处理流水线，
+ * 而是提交到该类。如果总请求数大于{@link #maxRequests}，会阻塞住{@link #stallTime}
+ * 直到低于限制
+ *
  * When enabled, the RequestThrottler limits the number of outstanding requests
  * currently submitted to the request processor pipeline. The throttler augments
  * the limit imposed by the <code>globalOutstandingLimit</code> that is enforced
@@ -76,6 +84,7 @@ public class RequestThrottler extends ZooKeeperCriticalThread {
     }
 
     /**
+     * 在阻塞请求前允许的最大请求数
      * The total number of outstanding requests allowed before the throttler
      * starts stalling.
      *
@@ -84,12 +93,14 @@ public class RequestThrottler extends ZooKeeperCriticalThread {
     private static volatile int maxRequests = Integer.getInteger("zookeeper.request_throttle_max_requests", 0);
 
     /**
+     * 在允许处理请求前的暂停时间
      * The time (in milliseconds) this is the maximum time for which throttler
      * thread may wait to be notified that it may proceed processing a request.
      */
     private static volatile int stallTime = Integer.getInteger("zookeeper.request_throttle_stall_time", 100);
 
     /**
+     * 当为true 时，限流器会放弃过期请求，而不是放到请求流水线中。过期请求为过期会话的请求
      * When true, the throttler will drop stale requests rather than issue
      * them to the request pipeline. A stale request is a request sent by
      * a connection that is now closed, and/or a request that will have a
@@ -98,6 +109,14 @@ public class RequestThrottler extends ZooKeeperCriticalThread {
      */
     private static volatile boolean dropStaleRequests = Boolean.parseBoolean(System.getProperty("zookeeper.request_throttle_drop_stale", "true"));
 
+    /**
+     * 1.请求可以限流
+     * 2.有配置限流等待时间{@link ZooKeeperServer#throttledOpWaitTime}
+     * 3.给定参数elapsedTime > {@link ZooKeeperServer#throttledOpWaitTime}
+     * @param request
+     * @param elapsedTime
+     * @return
+     */
     protected boolean shouldThrottleOp(Request request, long elapsedTime) {
         return request.isThrottlable()
                 && zks.getThrottledOpWaitTime() > 0
@@ -166,6 +185,7 @@ public class RequestThrottler extends ZooKeeperCriticalThread {
                         if (zks.getInProcess() < maxRequests) {
                             break;
                         }
+                        // 超出运行最大请求数，阻塞等待
                         throttleSleep(stallTime);
                     }
                 }
@@ -209,6 +229,10 @@ public class RequestThrottler extends ZooKeeperCriticalThread {
         this.notify();
     }
 
+    /**
+     * 当限流器正常关闭，队列应该为空。但是如果超过关闭时间限制限流器被关闭，只能放弃
+     * 所有请求
+     */
     private int drainQueue() {
         // If the throttler shutdown gracefully, the queue will be empty.
         // However, if the shutdown time limit was reached and the throttler
@@ -224,6 +248,10 @@ public class RequestThrottler extends ZooKeeperCriticalThread {
         return dropped;
     }
 
+    /**
+     * 因为会话过期而丢弃请求，所以此处直接将连接置为无效，防止之后再有请求进来
+     * @param request
+     */
     private void dropRequest(Request request) {
         // Since we're dropping a request on the floor, we must mark the
         // connection as invalid to ensure any future requests from this

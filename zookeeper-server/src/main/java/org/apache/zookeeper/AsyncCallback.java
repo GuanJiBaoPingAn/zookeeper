@@ -24,6 +24,10 @@ import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 
 /**
+ * 定义异步回调的接口
+ * <p>ZooKeeper 对同步和异步提供一样的API
+ * <p>异步回调是在方法返回后进行调用
+ * <p>
  * Interface definitions of asynchronous callbacks.
  *
  * <p>ZooKeeper provides asynchronous version as equivalent to synchronous APIs.
@@ -39,12 +43,20 @@ import org.apache.zookeeper.data.Stat;
 public interface AsyncCallback {
 
     /**
+     * 该回调用于获取node 的状态
      * This callback is used to retrieve the stat of the node.
      */
     @InterfaceAudience.Public
     interface StatCallback extends AsyncCallback {
 
         /**
+         * 处理异步调用结果
+         * <p>成功，rc为{@link KeeperException.Code#OK}
+         * <p>失败，rc为相应错误码{@link KeeperException}
+         * <ul>
+         *     <li>{@link KeeperException.Code#NONODE} 给定路径节点不存在
+         *     <li>{@link KeeperException.Code#BADVERSION} 给定版本不符合节点版本
+         * </ul>
          * Process the result of the asynchronous call.
          *
          * <p>On success, rc is {@link KeeperException.Code#OK}.
@@ -72,6 +84,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 用于获取给定路径节点的子节点个数回调
      * This callback is used to get all children node number of the node.
      *
      * @since 3.6.0
@@ -91,6 +104,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 用于获取给定节点的数据和状态
      * This callback is used to retrieve the data and stat of the node.
      */
     @InterfaceAudience.Public
@@ -123,6 +137,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 获取节点的ACL 和状态
      * This callback is used to retrieve the ACL and stat of the node.
      */
     @InterfaceAudience.Public
@@ -152,6 +167,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 获取节点的子节点
      * This callback is used to retrieve the children of the node.
      */
     @InterfaceAudience.Public
@@ -181,6 +197,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 用于获取给定节点的子节点和状态
      * This callback is used to retrieve the children and stat of the node.
      */
     @InterfaceAudience.Public
@@ -204,6 +221,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 用于获取及诶单的名称和状态
      * This callback is used to retrieve the name and stat of the node.
      */
     @InterfaceAudience.Public
@@ -229,6 +247,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 用于获取节点的名称
      * This callback is used to retrieve the name of the node.
      */
     @InterfaceAudience.Public
@@ -264,6 +283,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 该回调不获取节点的任何数据。
      * This callback doesn't retrieve anything from the node. It is useful for some APIs
      * that doesn't want anything sent back, e.g. {@link ZooKeeper#sync(String, VoidCallback, Object)}.
      */
@@ -301,6 +321,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 用于处理一个多次调用的多个结果
      * This callback is used to process the multiple results from a single multi call.
      */
     @InterfaceAudience.Public
@@ -330,6 +351,7 @@ public interface AsyncCallback {
     }
 
     /**
+     * 用于处理一个getEphemeral 调用的结果
      * This callback is used to process the getEphemerals results from a single getEphemerals call.
      *
      * @see ZooKeeper#getEphemerals(EphemeralsCallback, Object)

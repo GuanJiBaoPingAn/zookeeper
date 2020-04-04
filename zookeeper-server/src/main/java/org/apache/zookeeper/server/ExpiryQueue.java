@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.zookeeper.common.Time;
 
 /**
+ * ExpiryQueue 过期队列，以时间进行分割
  * ExpiryQueue tracks elements in time sorted fixed duration buckets.
  * It's used by SessionTrackerImpl to expire sessions and NIOServerCnxnFactory
  * to expire connections.
@@ -36,6 +37,7 @@ public class ExpiryQueue<E> {
 
     private final ConcurrentHashMap<E, Long> elemMap = new ConcurrentHashMap<E, Long>();
     /**
+     * 最大个数为max timeout/expirationInterval
      * The maximum number of buckets is equal to max timeout/expirationInterval,
      * so the expirationInterval should not be too small compared to the
      * max timeout that this expiry queue needs to maintain.
@@ -118,6 +120,7 @@ public class ExpiryQueue<E> {
     }
 
     /**
+     * 返回现在到下次过期需要等待的时间
      * @return milliseconds until next expiration time, or 0 if has already past
      */
     public long getWaitTime() {
@@ -127,6 +130,8 @@ public class ExpiryQueue<E> {
     }
 
     /**
+     * 从expireMap 中移除下一个需要过期的集合。该方法需要频繁调用，否则咋子expiryMap 中会
+     * 出现空集合等待
      * Remove the next expired set of elements from expireMap. This method needs
      * to be called frequently enough by checking getWaitTime(), otherwise there
      * will be a backlog of empty sets queued up in expiryMap.

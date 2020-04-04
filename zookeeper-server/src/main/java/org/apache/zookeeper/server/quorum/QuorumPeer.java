@@ -84,6 +84,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类管理quorum 协议。该服务器会有三种状态
+ * <ol>
+ *     <li>leader 选举，每个服务器会选举leader（提议自己作为leader）
+ *     <li>follower，服务器会和leader 节点同步
+ *     <li>leader，服务器会处理请求并转发至follower，follower 主体必须先记录日志在接受
+ * </ol>
+ *
  * This class manages the quorum protocol. There are three states this server
  * can be in:
  * <ol>
@@ -504,7 +511,8 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
         TRUNC
     }
 
-    /*
+    /**
+     * learner 可能会参与，也可能只是观察者
      * A peer can either be participating, which implies that it is willing to
      * both vote in instances of consensus and to elect or become a Leader, or
      * it may be observing in which case it isn't.
@@ -571,10 +579,12 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     //last proposed quorum verifier
     private QuorumVerifier lastSeenQuorumVerifier = null;
 
+    /** QuorumVerifier 锁，用于{@link #quorumVerifier} 和 {@link #lastSeenQuorumVerifier} */
     // Lock object that guard access to quorumVerifier and lastSeenQuorumVerifier.
     final Object QV_LOCK = new Object();
 
     /**
+     * server id
      * My id
      */
     private long myid;
@@ -609,6 +619,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     }
 
     /**
+     * 当前投票的对象
      * This is who I think the leader currently is.
      */
     private volatile Vote currentVote;
@@ -1553,6 +1564,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     }
 
     /**
+     * 获取所有的同行
      * A 'view' is a node's current opinion of the membership of the entire
      * ensemble.
      */
@@ -1561,6 +1573,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     }
 
     /**
+     * 获取会投票的同行，值选取状态为{@link LearnerType#PARTICIPANT} 的同行
      * Observers are not contained in this view, only nodes with
      * PeerType=PARTICIPANT.
      */
@@ -1575,6 +1588,9 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
         return getQuorumVerifier().getObservingMembers();
     }
 
+    /**
+     * 获取当前或下一次需要投票的服务器sid 集合
+     */
     public synchronized Set<Long> getCurrentAndNextConfigVoters() {
         Set<Long> voterIds = new HashSet<Long>(getQuorumVerifier().getVotingMembers().keySet());
         if (getLastSeenQuorumVerifier() != null) {

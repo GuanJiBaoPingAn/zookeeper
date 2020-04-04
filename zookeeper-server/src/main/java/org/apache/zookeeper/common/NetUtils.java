@@ -23,10 +23,16 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 /**
+ * 网络相关工具类
  * This class contains common utilities for netstuff. Like printing IPv6 literals correctly
  */
 public class NetUtils {
 
+    /**
+     * 将给定{@link InetSocketAddress} 转换为字符串
+     * @param addr
+     * @return
+     */
     public static String formatInetAddr(InetSocketAddress addr) {
         InetAddress ia = addr.getAddress();
 

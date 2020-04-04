@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 
+/**
+ * 同行同步状态追踪器
+ */
 public class SyncedLearnerTracker {
 
     protected ArrayList<QuorumVerifierAcksetPair> qvAcksetPairs = new ArrayList<QuorumVerifierAcksetPair>();
@@ -50,6 +53,9 @@ public class SyncedLearnerTracker {
         return true;
     }
 
+    /**
+     * 给类能否完成选举
+     */
     public boolean hasAllQuorums() {
         for (QuorumVerifierAcksetPair qvAckset : qvAcksetPairs) {
             if (!qvAckset.getQuorumVerifier().containsQuorum(qvAckset.getAckset())) {
@@ -69,6 +75,9 @@ public class SyncedLearnerTracker {
         return sb.substring(0, sb.length() - 1);
     }
 
+    /**
+     * quorum 校验器和需要响应的同行
+     */
     public static class QuorumVerifierAcksetPair {
 
         private final QuorumVerifier qv;

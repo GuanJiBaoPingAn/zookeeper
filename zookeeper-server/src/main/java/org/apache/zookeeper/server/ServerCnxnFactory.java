@@ -49,10 +49,12 @@ public abstract class ServerCnxnFactory {
     protected boolean secure;
 
     /**
+     * 当我们发送该缓存时会导致连接关闭
      * The buffer will cause the connection to be close when we do a send.
      */
     static final ByteBuffer closeConn = ByteBuffer.allocate(0);
 
+    /** ZooKeeperServer 接受的总连接数 */
     // total number of connections accepted by the ZooKeeper server
     protected int maxCnxns;
 

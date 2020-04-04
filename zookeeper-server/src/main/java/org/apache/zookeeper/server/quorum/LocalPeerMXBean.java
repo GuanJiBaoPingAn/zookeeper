@@ -19,6 +19,7 @@
 package org.apache.zookeeper.server.quorum;
 
 /**
+ * 本地ZooKeeper 服务器MBean 接口。与远程服务器不同，本地提供运行时完整的数据
  * A local zookeeper server MBean interface. Unlike the remote peer, the local
  * peer provides complete state/statistics at runtime and can be managed (just
  * like a standalone zookeeper server).

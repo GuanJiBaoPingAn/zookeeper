@@ -19,10 +19,15 @@
 package org.apache.zookeeper;
 
 /**
+ * 在{@link ZooKeeper#addWatch(String, Watcher, AddWatchMode)} 中可以使用的创建模式
  * Modes available to {@link ZooKeeper#addWatch(String, Watcher, AddWatchMode)}
  */
 public enum AddWatchMode {
     /**
+     * <p>
+     * 为给定路径设置watcher，当触发时不会被删除data 和child 事件都触发。
+     * 用removeWatches() 来删除watcher
+     * </p>
      * <p>
      * Set a watcher on the given path that does not get removed when triggered (i.e. it stays active
      * until it is removed). This watcher
@@ -34,6 +39,11 @@ public enum AddWatchMode {
     PERSISTENT(ZooDefs.AddWatchModes.persistent),
 
     /**
+     * <p>
+     * 为给定路径设置watcher
+     * a)当触发时不会被删除
+     * b)不仅对注册路径，同时对所有的子路径
+     * </p>
      * <p>
      * Set a watcher on the given path that: a) does not get removed when triggered (i.e. it stays active
      * until it is removed); b) applies not only to the registered path but all child paths recursively. This watcher

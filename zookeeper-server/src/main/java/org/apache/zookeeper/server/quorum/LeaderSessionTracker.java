@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * leader 会话追踪器追踪在leader 节点的本地和全局会话
  * The leader session tracker tracks local and global sessions on the leader.
  */
 public class LeaderSessionTracker extends UpgradeableSessionTracker {

@@ -19,6 +19,7 @@
 package org.apache.zookeeper.server;
 
 /**
+ * 该MBean 代表客户端连接
  * This MBean represents a client connection.
  */
 public interface ConnectionMXBean {

@@ -27,6 +27,7 @@ import org.apache.zookeeper.server.quorum.QuorumPeerConfig.ConfigException;
 import org.apache.zookeeper.server.util.ConfigUtils;
 
 /**
+ * ZooKeeper 客户端connectString 的parser
  * A parser for ZooKeeper Client connect strings.
  *
  * This class is not meant to be seen or used outside of ZooKeeper itself.

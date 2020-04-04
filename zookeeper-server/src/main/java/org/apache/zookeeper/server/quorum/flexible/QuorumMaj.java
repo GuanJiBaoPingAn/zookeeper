@@ -28,6 +28,7 @@ import org.apache.zookeeper.server.quorum.QuorumPeer.QuorumServer;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig.ConfigException;
 
 /**
+ * 该类实现了一个quorum 主体的校验器
  * This class implements a validator for majority quorums. The implementation is
  * straightforward.
  *
@@ -38,6 +39,8 @@ public class QuorumMaj implements QuorumVerifier {
     private Map<Long, QuorumServer> votingMembers = new HashMap<Long, QuorumServer>();
     private Map<Long, QuorumServer> observingMembers = new HashMap<Long, QuorumServer>();
     private long version = 0;
+
+    /** quorum 主体的半数 */
     private int half;
 
     public int hashCode() {
@@ -130,6 +133,7 @@ public class QuorumMaj implements QuorumVerifier {
     }
 
     /**
+     * 校验给定集合是否为主题。此处假定给定ackSet 中的所有元素都为{@link #votingMembers} 中的元素
      * Verifies if a set is a majority. Assumes that ackSet contains acks only
      * from votingMembers
      */

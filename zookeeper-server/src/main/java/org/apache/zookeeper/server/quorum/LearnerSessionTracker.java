@@ -37,6 +37,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * leaner 节点（follower 和observer）使用的会话追踪器。当创建新的会话，保存在本地。
+ * 它能将会话升级成全局会话。如果需要升级会话，则从本地会话中删除，并保存该会话id。它会产生
+ * 一个创建会话的请求到leader。
  * The learner session tracker is used by learners (followers and observers) to
  * track zookeeper sessions which may or may not be echoed to the leader.  When
  * a new session is created it is saved locally in a wrapped

@@ -22,11 +22,13 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
+ * 用于和quorum learner 节点认证的接口
  * Interface for quorum learner authentication mechanisms.
  */
 public interface QuorumAuthLearner {
 
     /**
+     * 对给定连接进行认证
      * Performs an authentication step for the given socket connection.
      *
      * @param sock

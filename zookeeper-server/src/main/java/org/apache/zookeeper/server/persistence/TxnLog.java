@@ -26,6 +26,7 @@ import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 
 /**
+ * 定义了读取事务日志的接口
  * Interface for reading transaction logs.
  *
  */

@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 管理清理容器ZNode。该类只给leader 使用。
  * Manages cleanup of container ZNodes. This class is meant to only
  * be run from the leader. There's no harm in running from followers/observers
  * but that will be extra work that's not needed. Once started, it periodically

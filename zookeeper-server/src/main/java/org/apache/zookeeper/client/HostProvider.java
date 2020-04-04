@@ -23,6 +23,7 @@ import java.util.Collection;
 import org.apache.yetus.audience.InterfaceAudience;
 
 /**
+ * ZooKeeper 客户端需要连接的主机
  * A set of hosts a ZooKeeper client should connect to.
  *
  * Classes implementing this interface must guarantee the following:

@@ -19,6 +19,7 @@
 package org.apache.zookeeper.metrics;
 
 /**
+ * 统计，最小值、最大值、平均值
  * Summaries track the size and number of events.
  * They are able to publish minumum, maximum, average values, depending on the capabilities of the MetricsProvider.
  */

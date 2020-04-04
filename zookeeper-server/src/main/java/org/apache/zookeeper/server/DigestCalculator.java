@@ -24,6 +24,7 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.StatPersisted;
 
 /**
+ * 定义如何计算给定节点的摘要
  * Defines how to calculate the digest for a given node.
  */
 public class DigestCalculator {
@@ -34,6 +35,7 @@ public class DigestCalculator {
 
 
     /**
+     * 根据给定参数计算摘要
      * Calculate the digest based on the given params.
      *
      * Besides the path and data, the following stat fields are included in

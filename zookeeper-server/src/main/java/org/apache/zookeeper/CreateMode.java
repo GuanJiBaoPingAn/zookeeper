@@ -47,6 +47,8 @@ public enum CreateMode {
      */
     EPHEMERAL_SEQUENTIAL(3, true, true, false, false),
     /**
+     * znode 节点为容器节点。容器节点是特殊目的的节点，如lock、leaeder等。当容器的最后一个子节点被删除，
+     * 容器会被服务器在未来的某个点删除
      * The znode will be a container node. Container
      * nodes are special purpose nodes useful for recipes such as leader, lock,
      * etc. When the last child of a container is deleted, the container becomes
@@ -57,12 +59,14 @@ public enum CreateMode {
      */
     CONTAINER(4, false, false, true, false),
     /**
+     * znode 不会再客户端断开连接时被删除。但是如果znode 在给定TTL 内没有被修改过，会被删除
      * The znode will not be automatically deleted upon client's disconnect.
      * However if the znode has not been modified within the given TTL, it
      * will be deleted once it has no children.
      */
     PERSISTENT_WITH_TTL(5, false, false, false, true),
     /**
+     * znode 不会再客户端断开连接时被删除，名字会每次增加。但是如果znode 在给定TTL 内没有被修改过，会被删除
      * The znode will not be automatically deleted upon client's disconnect,
      * and its name will be appended with a monotonically increasing number.
      * However if the znode has not been modified within the given TTL, it

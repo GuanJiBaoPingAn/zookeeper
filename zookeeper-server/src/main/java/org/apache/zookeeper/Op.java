@@ -34,6 +34,7 @@ import org.apache.zookeeper.proto.SetDataRequest;
 import org.apache.zookeeper.server.EphemeralType;
 
 /**
+ * 表示一个多操作事务中的一个操作。每个操作可以创建、更新、删除、版本检查、读（getChildren或getData）
  * Represents a single operation in a multi-operation transaction.  Each operation can be a create, update,
  * delete, a version check or just read operations like getChildren or getData.
  *

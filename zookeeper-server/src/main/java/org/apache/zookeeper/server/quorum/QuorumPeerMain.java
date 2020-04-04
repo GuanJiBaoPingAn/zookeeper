@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 当该类的main() 方法被调用，第一个参数为配置文件，文件是properties 的文件。
  *
  * <h2>Configuration file</h2>
  *

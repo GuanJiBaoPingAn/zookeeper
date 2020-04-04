@@ -19,6 +19,7 @@
 package org.apache.zookeeper.metrics;
 
 /**
+ * 计数器指它的值可以增长
  * A counter refers to a value which can only increase.
  * Usually the value is reset when the process starts.
  */

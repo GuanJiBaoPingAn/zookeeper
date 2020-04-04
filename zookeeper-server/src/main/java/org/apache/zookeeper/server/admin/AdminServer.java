@@ -22,6 +22,8 @@ import org.apache.yetus.audience.InterfaceAudience;
 import org.apache.zookeeper.server.ZooKeeperServer;
 
 /**
+ * 内嵌的管理服务器。只有一个实现JettyAdminServer。DummyAdminServer 不实现任何，当不期望
+ * 使用服务器时使用
  * Interface for an embedded admin server that runs Commands. There is only one
  * functional implementation, JettyAdminServer. DummyAdminServer, which does
  * nothing, is used when we do not wish to run a server.

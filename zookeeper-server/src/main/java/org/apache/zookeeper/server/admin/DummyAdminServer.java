@@ -21,6 +21,7 @@ package org.apache.zookeeper.server.admin;
 import org.apache.zookeeper.server.ZooKeeperServer;
 
 /**
+ * AdminServer 的实现，但不执行任何请求
  * An AdminServer that does nothing.
  *
  * We use this class when we wish to disable the AdminServer. (This way we only

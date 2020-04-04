@@ -23,6 +23,7 @@ import java.util.Set;
 import org.apache.zookeeper.server.quorum.QuorumPeer.QuorumServer;
 
 /**
+ * 所有的quorum 校验器都需要实现{@link #containsQuorum(Set)} 方法
  * All quorum validators have to implement a method called
  * containsQuorum, which verifies if a HashSet of server
  * identifiers constitutes a quorum.

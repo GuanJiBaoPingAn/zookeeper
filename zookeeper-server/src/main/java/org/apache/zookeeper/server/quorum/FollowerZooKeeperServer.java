@@ -40,6 +40,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 与ZooKeeperServer 一样。只是修改了请求链，
+ * FollowerRequestProcessor -> CommitProcessor -> FinalRequestProcessor
+ *
  * Just like the standard ZooKeeperServer. We just replace the request
  * processors: FollowerRequestProcessor -&gt; CommitProcessor -&gt;
  * FinalRequestProcessor

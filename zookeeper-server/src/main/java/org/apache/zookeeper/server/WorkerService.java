@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类为worker 线程池。
  * WorkerService is a worker thread pool for running tasks and is implemented
  * using one or more ExecutorServices. A WorkerService can support assignable
  * threads, which it does by creating N separate single thread ExecutorServices,
@@ -72,6 +73,7 @@ public class WorkerService {
     }
 
     /**
+     * 调用者需要实现该类来用于该服务的任务调度
      * Callers should implement a class extending WorkRequest in order to
      * schedule work with the service.
      */
@@ -92,6 +94,8 @@ public class WorkerService {
     }
 
     /**
+     * 调度任务。如果worker 线程池没有使用，该线程直接执行。该API 用于不可赋值的worker
+     * 服务。对于可赋值worker 服务需要在第一个线程执行
      * Schedule work to be done.  If a worker thread pool is not being
      * used, work is done directly by this thread. This schedule API is
      * for use with non-assignable WorkerServices. For assignable
@@ -161,6 +165,9 @@ public class WorkerService {
     }
 
     /**
+     * worker 线程池的线程工厂。我们没有使用默认线程工厂，原因如下
+     * 1.我们需要worker 线程更易辨别的名称
+     * 2.我们需要worker 线程是守护线程，让它们在关闭时不会阻塞服务器
      * ThreadFactory for the worker thread pool. We don't use the default
      * thread factory because (1) we want to give the worker threads easier
      * to identify names; and (2) we want to make the worker threads daemon

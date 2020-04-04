@@ -21,6 +21,7 @@ package org.apache.zookeeper.server;
 import java.util.Date;
 
 /**
+ * ServerCnxn 的统计
  * Statistics on the ServerCnxn
  */
 interface Stats {

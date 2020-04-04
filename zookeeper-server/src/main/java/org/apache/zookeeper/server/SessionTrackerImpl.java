@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类是有全部特性的SessionTracker。它将会话通过tick 间隔进行分组。将tick 间隔向上取整来得到
+ * 一串。因此，会话是批量过期的。
  * This is a full featured SessionTracker. It tracks session in grouped by tick
  * interval. It always rounds up the tick interval to provide a sort of grace
  * period. Sessions are thus expired in batches made up of sessions that expire
@@ -45,6 +47,7 @@ public class SessionTrackerImpl extends ZooKeeperCriticalThread implements Sessi
 
     private static final Logger LOG = LoggerFactory.getLogger(SessionTrackerImpl.class);
 
+    /** sessionId -> session */
     protected final ConcurrentHashMap<Long, SessionImpl> sessionsById = new ConcurrentHashMap<Long, SessionImpl>();
 
     private final ExpiryQueue<SessionImpl> sessionExpiryQueue;
@@ -83,6 +86,8 @@ public class SessionTrackerImpl extends ZooKeeperCriticalThread implements Sessi
     }
 
     /**
+     * 生成sessionId
+     * <p>最高1字节为serverId，之后5字节为时间戳，最低2字节为0
      * Generates an initial sessionId.
      *
      * <p>High order 1 byte is serverId, next 5 bytes are from timestamp, and low order 2 bytes are 0s.
@@ -221,6 +226,9 @@ public class SessionTrackerImpl extends ZooKeeperCriticalThread implements Sessi
         return sessionsWithTimeout.get(sessionId);
     }
 
+    /**
+     * 设置会话的isClosing 字段为true
+     * */
     public synchronized void setSessionClosing(long sessionId) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Session closing: 0x{}", Long.toHexString(sessionId));

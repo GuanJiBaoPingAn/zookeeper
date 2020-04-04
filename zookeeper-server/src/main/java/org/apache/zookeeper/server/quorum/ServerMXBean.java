@@ -19,6 +19,7 @@
 package org.apache.zookeeper.server.quorum;
 
 /**
+ * quorum 服务器的MBean
  * A quorum server MBean.
  */
 public interface ServerMXBean {

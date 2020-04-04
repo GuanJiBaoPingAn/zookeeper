@@ -19,6 +19,7 @@
 package org.apache.zookeeper;
 
 /**
+ * 当摘要匹配错误通知事件
  * This interface is used to notify the digest mismatch event.
  */
 public interface DigestWatcher {

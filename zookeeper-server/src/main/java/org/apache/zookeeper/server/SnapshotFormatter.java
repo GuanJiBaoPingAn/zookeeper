@@ -39,6 +39,7 @@ import org.apache.zookeeper.util.ServiceUtils;
 import org.json.simple.JSONValue;
 
 /**
+ * 转储快照文件
  * Dump a snapshot file to stdout.
  *
  * For JSON format, followed https://dev.yorhel.nl/ncdu/jsonfmt

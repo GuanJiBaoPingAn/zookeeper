@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.function.BiConsumer;
 
 /**
+ * 该类统计数据并发布给外部系统。
  * A MetricsProvider is a system which collects Metrics and publishes current values to external facilities.
  *
  * The system will create an instance of the configured class using the default constructor, which must be public.<br>

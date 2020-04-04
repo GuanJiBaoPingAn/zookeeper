@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类实现了层级quorum 的校验器。ZooKeeper 分为多个组，每个服务器有一个权重。
  * This class implements a validator for hierarchical quorums. With this
  * construction, zookeeper servers are split into disjoint groups, and
  * each server has a weight. We obtain a quorum if we get more than half

@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 文件名称parse 低层级IO 文件操作工具集合
  * A collection of utility methods for dealing with file name parsing,
  * low level I/O file operations and marshalling/unmarshalling.
  */
@@ -86,6 +87,7 @@ public class Util {
     }
 
     /**
+     * 创建快照文件名称
      * Creates a snapshot file name.
      *
      * @param zxid used as a suffix
@@ -128,6 +130,9 @@ public class Util {
     }
 
     /**
+     * 从文件名称中获取zxid。文件名应该是使用{@link #makeLogName(long)} 或 {@link #makeSnapshotName(long)}
+     * 创建的
+     *
      * Extracts zxid from the file name. The file name should have been created
      * using one of the {@link #makeLogName(long)} or {@link #makeSnapshotName(long)}.
      *
@@ -212,6 +217,7 @@ public class Util {
     }
 
     /**
+     * 比较“prefix.version”格式的文件名称，返回版本顺序
      * Compare file file names of form "prefix.version". Sort order result
      * returned in order of version.
      */
@@ -236,6 +242,7 @@ public class Util {
     }
 
     /**
+     * 将给定文件排序。
      * Sort the list of files. Recency as determined by the version component
      * of the file name.
      *

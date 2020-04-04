@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类实现了{@link SnapShot}，需要负责存储、序列化、反序列化快照文件
+ *
  * This class implements the snapshot interface.
  * it is responsible for storing, serializing
  * and deserializing the right snapshot.

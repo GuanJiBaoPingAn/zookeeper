@@ -86,6 +86,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类实现了一个简单的独立ZooKeeper 服务器。设置了如下的链来处理请求：
+ * PrepRequestProcessor -> SyncRequestProcessor -> FinalRequestProcessor
+ *
  * This class implements a simple standalone ZooKeeperServer. It sets up the
  * following chain of RequestProcessors to process requests:
  * PrepRequestProcessor -&gt; SyncRequestProcessor -&gt; FinalRequestProcessor
@@ -171,8 +174,11 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
     private ResponseCache getChildrenResponseCache;
     private final AtomicLong hzxid = new AtomicLong(0);
     public static final Exception ok = new Exception("No prob");
+    /** 请求处理器链的链头 */
     protected RequestProcessor firstProcessor;
+    /** 监控JVM 是否出现停顿 */
     protected JvmPauseMonitor jvmPauseMonitor;
+    /** 服务的状态 */
     protected volatile State state = State.INITIAL;
     private boolean isResponseCachingEnabled = true;
     /* contains the configuration file content read at startup */
@@ -254,6 +260,7 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
     public static final String SNAP_COUNT = "zookeeper.snapCount";
 
     /**
+     * 该设置限制了请求的最大字节数
      * This setting sets a limit on the total number of large requests that
      * can be inflight and is designed to prevent ZooKeeper from accepting
      * too many large requests such that the JVM runs out of usable heap and
@@ -287,6 +294,7 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
     }
 
     /**
+     * 创建一个ZooKeeperServer 实例。没有进行配置
      * Creates a ZooKeeperServer instance. Nothing is setup, use the setX
      * methods to prepare the instance (eg datadir, datalogdir, ticktime,
      * builder, etc...)
@@ -299,6 +307,7 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
     }
 
     /**
+     * 创建一个ZookeeperServer 实例。将所有都配置好了，但没有真正启动，直到run() 方法被调用
      * Creates a ZooKeeperServer instance. It sets everything up, but doesn't
      * actually start listening for clients until run() is invoked.
      *
@@ -694,6 +703,9 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
 
     }
 
+    /**
+     * 设置请求处理器链
+     */
     protected void setupRequestProcessors() {
         RequestProcessor finalProcessor = new FinalRequestProcessor(this);
         RequestProcessor syncProcessor = new SyncRequestProcessor(this, finalProcessor);
@@ -868,6 +880,10 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
         return requestsInProcess.get();
     }
 
+    /**
+     * 限流器等待队列中请求数
+     * @return
+     */
     public int getInflight() {
         return requestThrottleInflight();
     }
@@ -1071,6 +1087,7 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
         if (requestThrottler == null) {
             synchronized (this) {
                 try {
+                    // 请求进入流水线需要流水线进入RUNNING 状态
                     // Since all requests are passed to the request
                     // processor it should wait for setting up the request
                     // processor chain. The state will be updated to RUNNING
@@ -1150,6 +1167,9 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
         }
     }
 
+    /**
+     * 服务器允许的全局请求数大小，未设置则为1000
+     */
     public int getGlobalOutstandingLimit() {
         String sc = System.getProperty(GLOBAL_OUTSTANDING_LIMIT);
         int limit;
@@ -1431,6 +1451,7 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
     }
 
     public boolean shouldThrottle(long outStandingCount) {
+        // 限流器等待队列中请求数 > 允许全局请求数
         if (getGlobalOutstandingLimit() < getInflight()) {
             return outStandingCount > 0;
         }
@@ -1550,6 +1571,9 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
         RequestHeader h = new RequestHeader();
         h.deserialize(bia, "header");
 
+        /**
+         * 首先需要增加进入请求数，否则可能出现竞态
+         */
         // Need to increase the outstanding request count first, otherwise
         // there might be a race condition that it enabled recv after
         // processing request and then disabled when check throttling.

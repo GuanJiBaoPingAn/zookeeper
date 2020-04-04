@@ -71,6 +71,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * ZooKeeper 的客户端命令行
  * The command line client to ZooKeeper.
  *
  */
@@ -102,7 +103,7 @@ public class ZooKeeperMain {
         commandMap.put("quit", "");
 
         new CloseCommand().addToMap(commandMapCli);
-        new CreateCommand().addToMap(commandMapCli);
+        /*new CreateCommand().addToMap(commandMapCli);
         new DeleteCommand().addToMap(commandMapCli);
         new DeleteAllCommand().addToMap(commandMapCli);
         new SetCommand().addToMap(commandMapCli);
@@ -123,7 +124,7 @@ public class ZooKeeperMain {
         new GetAllChildrenNumberCommand().addToMap(commandMapCli);
         new VersionCommand().addToMap(commandMapCli);
         new AddWatchCommand().addToMap(commandMapCli);
-
+*/
         // add all to commandMap
         for (Entry<String, CliCommand> entry : commandMapCli.entrySet()) {
             commandMap.put(entry.getKey(), entry.getValue().getOptionStr());

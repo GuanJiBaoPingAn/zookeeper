@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 管理Watch。
  * This class manages watches. It allows watches to be associated with a string
  * and removes watchers and their watches in addition to managing triggers.
  */
@@ -43,8 +44,10 @@ public class WatchManager implements IWatchManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchManager.class);
 
+    /** path -> watchers */
     private final Map<String, Set<Watcher>> watchTable = new HashMap<>();
 
+    /** watch -> paths */
     private final Map<Watcher, Set<String>> watch2Paths = new HashMap<>();
 
     private final WatcherModeManager watcherModeManager = new WatcherModeManager();

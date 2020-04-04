@@ -19,6 +19,7 @@
 package org.apache.zookeeper.jmx;
 
 /**
+ * ZooKeeper MBean 消息接口，MBeanRegistry 使用该接口来生成JMX 对象名称
  * Zookeeper MBean info interface. MBeanRegistry uses the interface to generate
  * JMX object name.
  */

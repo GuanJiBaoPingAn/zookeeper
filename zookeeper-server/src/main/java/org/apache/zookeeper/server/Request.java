@@ -33,6 +33,7 @@ import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 
 /**
+ * 请求处理流水线中处理的请求
  * This is the structure that represents a request moving through a chain of
  * RequestProcessors. There are various pieces of information that is tacked
  * onto the request as it is processed.
@@ -222,6 +223,7 @@ public class Request {
     }
 
     /**
+     * 若该链接之前的请求被丢弃，因此该请求也必须被球帝
      * A prior request was dropped on this request's connection and
      * therefore this request must also be dropped to ensure correct
      * ordering semantics.

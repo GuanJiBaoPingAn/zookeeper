@@ -84,6 +84,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类维护树数据。没有任何网络或连接代码
+ * 树维护了两个数据结构：
+ * 1.哈希表 全路径 -> DataNode
+ * 2.DataNode 树
  * This class maintains the tree data structure. It doesn't have any networking
  * or client connection code in it so that it can be tested in a stand alone
  * way.
@@ -99,6 +103,7 @@ public class DataTree {
     private final RateLogger RATE_LOGGER = new RateLogger(LOG, 15 * 60 * 1000);
 
     /**
+     * 该map 提供了datanode的快速查找。
      * This map provides a fast lookup to the datanodes. The tree is the
      * source of truth and is where all the locking occurs
      */
@@ -108,13 +113,13 @@ public class DataTree {
 
     private IWatchManager childWatches;
 
-    /** cached total size of paths and data for all DataNodes */
+    /** 所有DataNode 节点的大小 cached total size of paths and data for all DataNodes */
     private final AtomicLong nodeDataSize = new AtomicLong(0);
 
-    /** the root of zookeeper tree */
+    /** 树的根节点 the root of zookeeper tree */
     private static final String rootZookeeper = "/";
 
-    /** the zookeeper nodes that acts as the management and status node **/
+    /** 管理ZooKeeper 的节点 the zookeeper nodes that acts as the management and status node **/
     private static final String procZookeeper = Quotas.procZookeeper;
 
     /** this will be the string thats stored as a child of root */
@@ -130,6 +135,7 @@ public class DataTree {
     private static final String quotaChildZookeeper = quotaZookeeper.substring(procZookeeper.length() + 1);
 
     /**
+     * 配置位置
      * the zookeeper config node that acts as the config management node for
      * zookeeper
      */
@@ -149,41 +155,50 @@ public class DataTree {
     public static final int STAT_OVERHEAD_BYTES = (6 * 8) + (5 * 4);
 
     /**
+     * 临时节点的map sessionId ->
      * This hashtable lists the paths of the ephemeral nodes of a session.
      */
     private final Map<Long, HashSet<String>> ephemerals = new ConcurrentHashMap<Long, HashSet<String>>();
 
     /**
+     * 该集合储存所有容器节点
      * This set contains the paths of all container nodes
      */
     private final Set<String> containers = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
     /**
+     * 该节点储存所有TTL 节点
      * This set contains the paths of all ttl nodes
      */
     private final Set<String> ttls = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
     private final ReferenceCountedACLCache aclCache = new ReferenceCountedACLCache();
 
+    /** 树中摘要历史保存最大数 */
     // The maximum number of tree digests that we will keep in our history
     public static final int DIGEST_LOG_LIMIT = 1024;
 
+    /** 每128个事务转存摘要，16进制为0x80 方便对齐和服务器之间的比较 */
     // Dump digest every 128 txns, in hex it's 80, which will make it easier
     // to align and compare between servers.
     public static final int DIGEST_LOG_INTERVAL = 128;
 
+    /** 如果非空，我们需要寻找目标zxid */
     // If this is not null, we are actively looking for a target zxid that we
     // want to validate the digest for
     private ZxidDigest digestFromLoadedSnapshot;
 
+    /** 与树中最大zxid关联的摘要 */
     // The digest associated with the highest zxid in the data tree.
     private volatile ZxidDigest lastProcessedZxidDigest;
 
     private boolean firstMismatchTxn = true;
 
+    /** 摘要匹配错误时需要触发的事件 */
     // Will be notified when digest mismatch event triggered.
     private final List<DigestWatcher> digestWatchers = new ArrayList<>();
 
+    /** 历史摘要列表 */
     // The historical digests list.
     private LinkedList<ZxidDigest> digestLog = new LinkedList<>();
 
@@ -235,6 +250,7 @@ public class DataTree {
     }
 
     /**
+     * 获取所有节点的大小
      * Get the size of the nodes based on path and data length.
      *
      * @return size of the data
@@ -251,12 +267,16 @@ public class DataTree {
     }
 
     /**
+     * 获取节点的大小，基于给定路径和数据长度
      * Get the size of the node based on path and data length.
      */
     private static long getNodeSize(String path, byte[] data) {
         return (path == null ? 0 : path.length()) + (data == null ? 0 : data.length);
     }
 
+    /**
+     * 获取缓存的数据大小
+     */
     public long cachedApproximateDataSize() {
         return nodeDataSize.get();
     }
@@ -1888,13 +1908,16 @@ public class DataTree {
     }
 
     /**
+     * 摘要信息和特定zxid 关联的帮助类
      * A helper class to maintain the digest meta associated with specific zxid.
      */
     public class ZxidDigest {
 
         long zxid;
+        /** 与zxid 关联的摘要 */
         // the digest value associated with this zxid
         long digest;
+        /** 摘要计算的版本 */
         // the version when the digest was calculated
         int digestVersion;
 

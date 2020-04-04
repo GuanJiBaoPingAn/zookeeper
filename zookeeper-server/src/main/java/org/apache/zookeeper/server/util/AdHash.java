@@ -19,6 +19,7 @@
 package org.apache.zookeeper.server.util;
 
 /**
+ * 该增量hash 用于追踪data tree 的hash 值来快速确定油污保持同步
  * This incremental hash is used to keep track of the hash of
  * the data tree to that we can quickly validate that things
  * are in sync.

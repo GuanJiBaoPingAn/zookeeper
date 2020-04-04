@@ -32,6 +32,7 @@
  import org.slf4j.LoggerFactory;
 
  /**
+  * 前缀树
   * a class that implements prefix matching for
   * components of a filesystem path. the trie
   * looks like a tree with edges mapping to
@@ -51,7 +52,7 @@
      /** Logger for this class */
      private static final Logger LOG = LoggerFactory.getLogger(PathTrie.class);
 
-     /** Root node of PathTrie */
+     /** 前缀树的根节点 Root node of PathTrie */
      private final TrieNode rootNode;
 
      private final ReadWriteLock lock = new ReentrantReadWriteLock(true);

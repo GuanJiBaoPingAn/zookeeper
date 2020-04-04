@@ -60,6 +60,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * ClientCnxnSocket 的Netty 实现。负责连接服务器，网络读写操作
  * ClientCnxnSocketNetty implements ClientCnxnSocket abstract methods.
  * It's responsible for connecting to server, reading/writing network traffic and
  * being a layer between network data and higher level packets.
@@ -82,7 +83,7 @@ public class ClientCnxnSocketNetty extends ClientCnxnSocket {
     ClientCnxnSocketNetty(ZKClientConfig clientConfig) throws IOException {
         this.clientConfig = clientConfig;
         // Client only has 1 outgoing socket, so the event loop group only needs
-        // a single thread.
+        // a single thread. 客户端只会有一个输出连接，因此只需要一个线程
         eventLoopGroup = NettyUtils.newNioOrEpollEventLoopGroup(1 /* nThreads */);
         initProperties();
     }

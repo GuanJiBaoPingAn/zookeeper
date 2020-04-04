@@ -26,6 +26,21 @@ import org.apache.zookeeper.CreateMode;
 
 /**
  * <p>
+ * ZNode 节点<code>ephemeralOwner</code> 域的解释。ephemeralOwner 记录了ZNode 是否是临时节点和创建该节点
+ * 的会话。使用配置项<code>zookeeper.extendedTypesEnabled</code> 拓展TTL 节点属性。
+ * </p>
+ * <p>
+ * 当属性<code>zookeeper.extendedTypesEnabled</code> 被置为true 时，拓展模式启用，高八位被设置为
+ * <code>0xff00000000000000L</code>。最高八位之后的两个字节用于解析启用的特性。
+ * </p>
+ * <p>
+ * 目前，唯一的拓展属性时TTL 节点。对于TTL 节点，ephemeralOwner 最高位字节为0xff，之后两个字节为0，
+ * 之后的5个字节为TTL 的毫秒值，当TTL 为1的情况下为 <code>0xff00000000000001</code>
+ * </p>
+ * <p>
+ *
+ * </p>
+ * <p>
  * Abstraction that interprets the <code>ephemeralOwner</code> field of a ZNode. Originally,
  * the ephemeralOwner noted that a ZNode is ephemeral and which session created the node.
  * Through an optional system property (<code>zookeeper.extendedTypesEnabled</code>) "extended"

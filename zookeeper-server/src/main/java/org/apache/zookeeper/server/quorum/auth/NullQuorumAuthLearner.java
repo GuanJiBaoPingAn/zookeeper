@@ -21,6 +21,7 @@ package org.apache.zookeeper.server.quorum.auth;
 import java.net.Socket;
 
 /**
+ * 该类代表不进行learner 认证，直接返回
  * This class represents no authentication learner, it just return
  * without performing any authentication.
  */

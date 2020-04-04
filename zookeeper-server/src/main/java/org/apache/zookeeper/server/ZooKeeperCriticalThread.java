@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 表示重要的线程。当有异常从该线程抛出则退出系统
  * Represents critical thread. When there is an uncaught exception thrown by the
  * thread this will exit the system.
  */

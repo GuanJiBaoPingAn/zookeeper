@@ -19,6 +19,7 @@
 package org.apache.zookeeper.metrics;
 
 /**
+ * 仪表，是应用提供的对象，用于采样
  * A Gauge is an application provided object which will be called by the framework in order to sample the value
  * of an integer value.
  */

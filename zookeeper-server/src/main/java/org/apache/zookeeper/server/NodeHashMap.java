@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 该接口定义了Node map 中entry 的管理
  * The interface defined to manage the hash based on the entries in the
  * nodes map.
  */

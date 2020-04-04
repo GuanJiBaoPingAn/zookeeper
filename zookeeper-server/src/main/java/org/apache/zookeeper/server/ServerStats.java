@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 服务器状态统计
  * Basic Server Statistics
  */
 public class ServerStats {

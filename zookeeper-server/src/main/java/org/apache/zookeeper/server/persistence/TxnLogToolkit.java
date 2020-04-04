@@ -61,6 +61,9 @@ import org.apache.zookeeper.txn.Txn;
 import org.apache.zookeeper.txn.TxnHeader;
 import org.apache.zookeeper.util.ServiceUtils;
 
+/**
+ * 事务日志文件dump 工具类
+ */
 public class TxnLogToolkit implements Closeable {
 
     static class TxnLogToolkitException extends Exception {

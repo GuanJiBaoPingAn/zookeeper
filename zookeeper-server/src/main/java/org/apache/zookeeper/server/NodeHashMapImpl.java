@@ -25,6 +25,7 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.server.util.AdHash;
 
 /**
+ * 使用ConcurrentHashMap 作为存储底层
  * a simple wrapper to ConcurrentHashMap that recalculates a digest after
  * each mutation.
  */
@@ -102,6 +103,7 @@ public class NodeHashMapImpl implements NodeHashMap {
     }
 
     private void addDigest(String path, DataNode node) {
+        // zookeeper 路径下的不参与摘要
         // Excluding everything under '/zookeeper/' for digest calculation.
         if (path.startsWith(ZooDefs.ZOOKEEPER_NODE_SUBTREE)) {
             return;

@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 该类启动并允许单独的ZooKeeperServer
  * This class starts and runs a standalone ZooKeeperServer.
  */
 @InterfaceAudience.Public
@@ -56,7 +57,8 @@ public class ZooKeeperServerMain {
     private MetricsProvider metricsProvider;
     private AdminServer adminServer;
 
-    /*
+    /**
+     * 启动ZooKeeper 服务器
      * Start up the ZooKeeper server.
      *
      * @param args the configfile or the port datadir [ticktime]
@@ -129,7 +131,7 @@ public class ZooKeeperServerMain {
             } catch (MetricsProviderLifeCycleException error) {
                 throw new IOException("Cannot boot MetricsProvider " + config.getMetricsProviderClassName(), error);
             }
-            ServerMetrics.metricsProviderInitialized(metricsProvider);
+//            ServerMetrics.metricsProviderInitialized(metricsProvider);
             // Note that this thread isn't going to be doing anything else,
             // so rather than spawning another thread, we will just call
             // run() in this thread.

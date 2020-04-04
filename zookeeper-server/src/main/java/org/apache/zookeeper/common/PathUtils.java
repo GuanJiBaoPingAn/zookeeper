@@ -19,6 +19,7 @@
  package org.apache.zookeeper.common;
 
  /**
+  * 路径相关工具类
   * Path related utilities
   */
  public class PathUtils {

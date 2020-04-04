@@ -22,6 +22,7 @@ import java.util.Date;
 import org.apache.zookeeper.jmx.ZKMBeanInfo;
 
 /**
+ * leader 和follower 节点的MBean 抽象基类
  * An abstract base class for the leader and follower MBeans.
  */
 public abstract class ServerBean implements ServerMXBean, ZKMBeanInfo {

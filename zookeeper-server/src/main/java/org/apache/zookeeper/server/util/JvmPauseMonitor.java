@@ -33,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 类使用简单的线程。每次sleep，如果sleep 的时间明显比目标时间长，则JVM 或主机在停顿
+ *
  * This code is originally from hadoop-common, see:
  * https://github.com/apache/hadoop/blob/trunk/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/util/JvmPauseMonitor.java
  *

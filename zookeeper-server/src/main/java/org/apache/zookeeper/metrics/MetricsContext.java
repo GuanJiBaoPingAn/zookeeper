@@ -19,6 +19,8 @@
 package org.apache.zookeeper.metrics;
 
 /**
+ * MetricsContext 是metrics 的名字空间。每个组件/子模块都会有它自己的MetricsContext
+ *
  * A MetricsContext is like a namespace for metrics. Each component/submodule
  * will have its own MetricsContext.
  * <p>
@@ -73,11 +75,13 @@ public interface MetricsContext {
 
     enum DetailLevel {
         /**
+         * 返回的Summary 只收集简单的聚合数据，如最小值/最大值/平均值
          * The returned Summary is expected to track only simple aggregated
          * values, like min/max/avg
          */
         BASIC,
         /**
+         * 返回更多数据的聚合，如百分比
          * It is expected that the returned Summary performs expensive
          * aggregations, like percentiles.
          */

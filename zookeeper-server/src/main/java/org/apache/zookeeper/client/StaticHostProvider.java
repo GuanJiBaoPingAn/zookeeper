@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * {@link HostProvider} 的最简单实现
  * Most simple HostProvider, resolves on every next() call.
  *
  * Please be aware that although this class doesn't do any DNS caching, there're multiple levels of caching already

@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.zookeeper.data.Stat;
 
 /**
+ * 将多次操作提交的一部分进行编码
  * Encodes the result of a single part of a multiple operation commit.
  */
 public abstract class OpResult {

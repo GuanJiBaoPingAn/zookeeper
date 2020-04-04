@@ -50,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 服务连接的接口，表示客户端和服务端之间的连接
  * Interface to a Server connection - represents a connection from a client
  * to the server.
  */
@@ -125,6 +126,7 @@ public abstract class ServerCnxn implements Stats, Watcher {
     }
 
     /**
+     * 该标志表明该连接被关闭或正在被关闭
      * Flag that indicates that this connection is known to be closed/closing
      * and from which we can optionally ignore outstanding requests as part
      * of request throttling. This flag may be false when a connection is
@@ -134,6 +136,7 @@ public abstract class ServerCnxn implements Stats, Watcher {
     private volatile boolean stale = false;
 
     /**
+     * 该标志表明该连接的前一个请求在请求限流时被抛弃，因此之后的请求都会被抛弃
      * Flag that indicates that a request for this connection was previously
      * dropped as part of request throttling and therefore all future requests
      * must also be dropped to ensure ordering guarantees.

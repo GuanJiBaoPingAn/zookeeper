@@ -25,6 +25,8 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.KeeperException.SessionExpiredException;
 
 /**
+ * ZooKeeperServer 用于追踪会话的基本接口。单独和主ZooKeeperServer 使用相同的SessionTracker
+ * FollowerZooKeeperServer 使用的SessionTracker 是用来处理主转发的信息
  * This is the basic interface that ZooKeeperServer uses to track sessions. The
  * standalone and leader ZooKeeperServer use the same SessionTracker. The
  * FollowerZooKeeperServer uses a SessionTracker which is basically a simple
